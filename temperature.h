@@ -5,7 +5,7 @@ int* getDegreeFromLatitude(int* hgt, int* val) {
 	int* degree = malloc(sizeof(int));
 	double* pixelsPerDegree = malloc(sizeof(double));
 	*pixelsPerDegree = (double)(*hgt)/180.0;
-	*degree = 90 - (int)floor(*val / *pixelsPerDegree);
+	*degree = 90 - (int)floor((*val + 0.5)  / *pixelsPerDegree);
 	
 	free(pixelsPerDegree);
 	
