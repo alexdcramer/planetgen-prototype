@@ -18,8 +18,8 @@ int* genLatitudeTemp(int* heightmap, int* len, int* hgt, int* tilt) {
 	//
 	// neither of these temperatures appear to be impacted by any sort of non-latitudinal temperature fluxuation
 	
-	// thus, where x is an integer between -90 and 90 representing latitude, θ is the tilt in degrees, and y is the temperature, the formula is:
-	// y == -(2/3)|x+θ|+323.15
+	// thus, where x is an integer between -90 and 90 representing latitude, ε is the tilt in degrees, and y is the temperature, the formula is:
+	// y == -(2/3)|x+ε|+323.15
 	// i suspect warm and cool currents are responsible for these temperatures being a bit warmer than i expected in temperate areas
 	// especially because it lines up suspiciously well with inland eastern hemisphere temperatures	
 
