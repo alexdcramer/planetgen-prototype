@@ -26,32 +26,33 @@ int* genLatitudeTemp(int* heightmap, int* len, int* hgt, int* tilt) {
 	// something i will need to look into is what causes the slope and max temps, right now they're set at constants for earth-like atmospheres,
 	// but those constants shouldn't always be the case...
 	int* tempmap = malloc(sizeof(int) * *len * *hgt);
+	
 	int* index = malloc(sizeof(int));
 	*index = 0;
-
-
-	
-
 	for (int i = 0; i < *hgt; i++) {
+		// temperature is the same for each latitude, so longitude is only needed for setting the values	
+		int* latitudePixel = malloc(sizeof(int));
+		*latitudePixel = i;
+		int* degree = getDegreeFromLatitude(hgt, latitudePixel);
+		
+		double* summerAvg = malloc(sizeof(double));
+		double* winterAvg = malloc(sizeof(double));
+		
+		*summerAvg = ((-2  * abs(*degree - *tilt)) / 3) + 323.15;
+		*winterAvg = ((-2  * abs(*degree + *tilt)) / 3) + 323.15;	
+		
+		int* avg = malloc(sizeof(int));
+		*avg = (floor((*summerAvg + *winterAvg) / 2) / 3);
+		
 		for (int j = 0; j < *len; j++) {
-			int* latitudePixel = malloc(sizeof(int));
-			*latitudePixel = i;
-			int* degree = getDegreeFromLatitude(hgt, latitudePixel);
-			
-			double* summerAvg = malloc(sizeof(double));
-			double* winterAvg = malloc(sizeof(double));
-			
-			*summerAvg = -(2 / 3) * fabs(*degree - *tilt) + 323.15;
-		       	*winterAvg = -(2 / 3) * fabs(*degree + *tilt) + 323.15;	
-
-
-			tempmap[*index] = (int)floor((*summerAvg + *winterAvg) / 2.0);			
-			
-			free(summerAvg);
-			free(winterAvg);
-			
+			tempmap[*index] = *avg;			
 			*index += 1;
 		}
+		free(latitudePixel);
+		free(degree);
+		free(summerAvg);
+		free(winterAvg);
+		free(avg);
 	}
 
 	free(index);

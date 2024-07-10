@@ -5,8 +5,8 @@ int main() {
 	int* len = malloc(sizeof(int));
 	int* hgt = malloc(sizeof(int));
 	int* tilt = malloc(sizeof(int));
-	*len = 20;
-	*hgt = 10;
+	*len = 22;
+	*hgt = 11;
 	*tilt = 23;
 	int* heightmap = genHeightmap(len, hgt);
 	printHeightmap(heightmap, len, hgt);
@@ -14,6 +14,8 @@ int main() {
 
 
 	int* tempmap = genTempmap(heightmap, len, hgt, tilt);
+	
+	printf("Temperature:\n");
 	printHeightmap(tempmap, len, hgt);
 
 	free(len);
