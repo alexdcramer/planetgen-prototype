@@ -1,5 +1,6 @@
 #include "heightmap.h"
 #include "temperature.h"
+#include "rainfall.h"
 #include <string.h>
 
 int main(int argc, char* argv[]) {
@@ -23,18 +24,19 @@ int main(int argc, char* argv[]) {
 	
 	int* heightmap = genHeightmap(len, hgt);
 	printHeightmap(heightmap, len, hgt);
-	
-
-
 
 	int* tempmap = genTempmap(heightmap, len, hgt, tilt);
-	
 	printf("Temperature:\n");
 	printHeightmap(tempmap, len, hgt);
+	
+	int* rainfallmap = genRainfallmap(len, hgt, heightmap, tempmap);
+	printf("Rainfall:\n");
+	printHeightmap(rainfallmap, len, hgt);
 
 	free(len);
 	free(hgt);
 	free(heightmap);
 	free(tempmap);
+	free(rainfallmap);
 	return 0;
 }
