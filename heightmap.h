@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
+#include <string.h>
 
 int* genHeightmap(int* len, int* hgt) {
 
@@ -30,6 +32,84 @@ int* genHeightmap(int* len, int* hgt) {
 	return heightmapArr;
 }
 
+// FIXME: I break after 108 pixels in width!
+
+void mapToImg(int* heightmap, int* len, int* hgt) {
+	
+	// partially taken from a stackoverflow answer
+	
+	int* bits = malloc(sizeof(int));
+	int* bitWidth = malloc(sizeof(int));
+	int* imgSize = malloc(sizeof(int));
+	int* iHeaderSize = malloc(sizeof(int));
+	int* offBits = malloc(sizeof(int));
+	int* fileSize = malloc(sizeof(int));
+	int* numPlanes = malloc(sizeof(int));
+
+	*bits = 24;
+	*bitWidth = ((*len * *bits + 31) / 32) * 4;
+	*imgSize = *bitWidth * *hgt;
+	*iHeaderSize = 40;
+	*offBits = 54;
+	*fileSize = *imgSize + *offBits;
+	*numPlanes = 1;
+
+
+	// header
+	unsigned char header[54] = { 0 };
+	memcpy(header, "BM", 2);
+	memcpy(header + 2, fileSize, 4);
+	memcpy(header + 10, offBits, 4);
+	memcpy(header + 14, iHeaderSize, 4);
+	memcpy(header + 18, len, 4);
+	memcpy(header + 22, hgt, 4);
+	memcpy(header + 26, numPlanes, 2);
+	memcpy(header + 28, bits, 2);
+	memcpy(header + 34, imgSize, 4);
+	
+	// create pixel buffer
+	unsigned char* buffer = malloc(*imgSize);
+
+	int* index = malloc(sizeof(int));
+	*index = 0;
+
+	for (int i = *hgt - 1; i >= 0; i--) {
+		for (int j = 0; j < *len; j++) {
+			if (heightmap[*index] == 0) {
+				buffer[i * *bitWidth + j * 3] = 255;
+			} else {
+				buffer[i * *bitWidth + j * 3] = heightmap[*index];
+			}
+
+			buffer[i * *bitWidth + j * 3 + 1] = heightmap[*index];
+			buffer[i * *bitWidth + j * 3 + 2] = heightmap[*index];
+			
+
+			
+			*index += 1;	
+		}
+
+	}
+
+	free(index);
+	
+	// free header info
+	free(bits);
+	free(bitWidth);
+	free(imgSize);
+	free(iHeaderSize);
+	free(offBits);
+	free(fileSize);
+	free(numPlanes);
+
+	// write to file
+	FILE *fout = fopen("test.bmp", "wb");
+	fwrite(header, 1, 54, fout);
+	fwrite((char*)buffer, 1, *imgSize, fout);
+	fclose(fout);
+	free(buffer);
+
+}
 
 // this is temporary
 void printHeightmap(int* heightmap, int* len, int* hgt) {

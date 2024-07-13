@@ -24,6 +24,8 @@ int main(int argc, char* argv[]) {
 	
 	int* heightmap = genHeightmap(len, hgt);
 	printHeightmap(heightmap, len, hgt);
+	mapToImg(heightmap, len, hgt);
+
 
 	int* tempmap = genTempmap(heightmap, len, hgt, tilt);
 	printf("Temperature:\n");
